@@ -12,31 +12,30 @@ def print_word_freq(file):
     """Read in `file` and print out the frequency of words in that file."""
     with open(file, 'r') as f:
         file_string = f.read()
-        #file_list = file_string.splitlines() -> usure why I had this here originally
         lower_case_list = file_string.lower()
 
-        import string # Calls string module
-        
-        # for line in lower_case_list: -> didn't work / listed words vertically 
-        no_punct = lower_case_list.translate(str.maketrans('', '', string.punctuation)) # removes punctuation
-
-        lower_nopunct_list = no_punct.split(" ") # makes new list 
-
-        filtered_stop = [word for word in lower_nopunct_list if word not in STOP_WORDS] # filter out STOP_WORDS
+        # Calls string module
+        import string 
+        # Removes punctuation
+        no_punct = lower_case_list.translate(str.maketrans('', '', string.punctuation)) 
+        # Makes new list
+        lower_nopunct_list = no_punct.split(" ")  
+        # Filter out STOP_WORDS
+        filtered_stop = [word for word in lower_nopunct_list if word not in STOP_WORDS] 
         result = ' '.join(filtered_stop)
+        # Makes new list 
+        filtered_list = result.split() 
 
-        filtered_list = result.split() # makes new list 
-
-        d = dict() # create blank dictionary to add word : count as key : value pairs
-
-        for filter in filtered_list: # start of loop to check each word : count and add to dictionary
+        # Create empty dictionary to add word : count as key : value pairs
+        d = dict() 
+        # Start of loop to check each word : count and add to dictionary
+        for filter in filtered_list: 
             if filter in d: 
                 d[filter] = d[filter] + 1
             else:
                 d[filter] = 1 
-
-
-        for word in list(d.keys()): # Loopin dictionary to print / janky but working
+        # Loop in dictionary to print / janky but working
+        for word in list(d.keys()): 
             w_count = d[word]
             stars = str("*" * w_count)
             print(word, "|", w_count, stars)
