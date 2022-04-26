@@ -1,5 +1,6 @@
+from logging import Filterer
 from pydoc import Doc
-
+from tracemalloc import start
 
 STOP_WORDS = [
     'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he',
@@ -7,41 +8,38 @@ STOP_WORDS = [
     'will', 'with'
 ]
 
-
 def print_word_freq(file):
     """Read in `file` and print out the frequency of words in that file."""
     with open(file, 'r') as f:
         file_string = f.read()
-        file_list = file_string.splitlines()
-    for line in file_list:   
-        lower_case_list = line.lower()
+        #file_list = file_string.splitlines() -> usure why I had this here originally
+        lower_case_list = file_string.lower()
 
-        import string
-
-        no_punct = lower_case_list.translate(str.maketrans('', '', string.punctuation))
-
-        a = no_punct.split()
-
-        stop_filtered = [word for word in a if word not in STOP_WORDS]
-        result = ' '.join(stop_filtered)
+        import string # Calls string module
         
-        filtered = result.split()
+        # for line in lower_case_list: -> didn't work / listed words vertically 
+        no_punct = lower_case_list.translate(str.maketrans('', '', string.punctuation)) # removes punctuation
 
-        # List word with count with # and *
-        from collections import Counter
+        lower_nopunct_list = no_punct.split(" ") # makes new list 
 
-        word_count = Counter(filtered)
-        # doc = [result]
+        filtered_stop = [word for word in lower_nopunct_list if word not in STOP_WORDS] # filter out STOP_WORDS
+        result = ' '.join(filtered_stop)
 
-        # count = dict(Counter(word for sentence in doc for word in sentence.split())) # is counting per sentence
-        #count = dict(Counter(word for word in doc))
-        #print(count)
+        filtered_list = result.split() # makes new list 
 
-        print(word_count.most_common())
+        d = dict() # create blank dictionary to add word : count as key : value pairs
+
+        for filter in filtered_list: # start of loop to check each word : count and add to dictionary
+            if filter in d: 
+                d[filter] = d[filter] + 1
+            else:
+                d[filter] = 1 
 
 
-
-
+        for word in list(d.keys()): # Loopin dictionary to print / janky but working
+            w_count = d[word]
+            stars = str("*" * w_count)
+            print(word, "|", w_count, stars)
 
 
 if __name__ == "__main__":
